@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Good Morning — 3 Page Site</title>
+  <style>
+    :root{--bg:#ffe6f2;--accent:#ff6fa5;--muted:#8a6b7a;--card:#fff}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, system-ui, -apple-system, Roboto, \"Helvetica Neue\", Arial; background:#ffe6f2 url('https://png.pngtree.com/png-vector/20220608/ourmid/pngtree-cute-pink-heart-pattern-background-png-image_4811547.png') repeat;color:#333;min-height:100vh;display:flex;flex-direction:column}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;background:transparent}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:46px;height:46px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#ffd3e0,#ffefef);box-shadow:0 6px 18px rgba(255,180,198,0.18)}
+    nav a{margin-left:12px;text-decoration:none;color:var(--muted);font-weight:600}
+    nav a.active{color:#ff6b94}
+
+    main{flex:1;display:grid;place-items:center;padding:28px}
+    .page{display:none;width:100%;max-width:980px}
+    .page.active{display:block}
+
+    /* Home card */
+    .card{background:var(--card);border-radius:18px;padding:28px;box-shadow:0 8px 30px rgba(122,109,120,0.06);display:flex;gap:24px;align-items:center}
+    .left{flex:1}
+    h1{margin:0;font-size:36px;color:#ff4f7a}
+    p.lead{margin:8px 0 16px;color:var(--muted)}
+    .cta{display:inline-block;padding:10px 16px;border-radius:12px;background:linear-gradient(90deg,#ff8bb3,#ff5a8a);color:white;text-decoration:none;font-weight:700}
+
+    /* Sun animation */
+    .sun-wrap{width:160px;height:160px;position:relative}
+    .sun{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff9d9 0%, #ffd36b 30%, #ffb35f 60%, #ff8b3d 100%);box-shadow:0 12px 40px rgba(255,139,179,0.14);position:relative;overflow:visible}
+    .rays{position:absolute;inset:-30%;display:grid;place-items:center}
+    .ray{position:absolute;width:8px;height:40%;left:50%;top:0;background:linear-gradient(#ffd7a6,#ffb36a);transform-origin:50% 100%;border-radius:4px;opacity:0.95}
+    /* generate multiple rays via JS */
+    .sun-wrap.sunrise{animation:float 6s ease-in-out infinite}
+    @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)} }
+
+    /* Quotes page */
+    .quotes{display:grid;gap:14px}
+    blockquote{margin:0;padding:18px;border-left:4px solid #ffd3d9;background:#fff7f8;border-radius:8px}
+    .quote-actions{margin-top:12px}
+
+    /* Gallery */
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+    .tile{background:#fff;padding:12px;border-radius:12px;display:grid;place-items:center;min-height:140px}
+
+    footer{padding:14px 24px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:700px){h1{font-size:26px}.card{flex-direction:column;align-items:flex-start}.sun-wrap{width:120px;height:120px}}
+  
+    /* Floating hearts animation */
+    .heart-container{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+    .floating-heart{position:absolute;font-size:24px;color:#ff5fa2;opacity:0.8;animation:floatUp 6s linear infinite}
+    @keyframes floatUp{0%{transform:translateY(100vh) scale(0.8);opacity:1}80%{opacity:1}100%{transform:translateY(-10vh) scale(1.4);opacity:0}}
+  
+    /* Sparkles */
+    .sparkle{position:absolute;width:6px;height:6px;background:white;border-radius:50%;opacity:0.8;box-shadow:0 0 8px white;animation: sparkleFloat 3s linear forwards}
+    @keyframes sparkleFloat{0%{transform:translateY(0) scale(0.6);opacity:1}100%{transform:translateY(-120px) scale(1.4);opacity:0}}
+
+    /* Petals */
+    .petal{position:absolute;font-size:22px;opacity:0.85;animation: petalFall 8s linear infinite}
+    @keyframes petalFall{0%{transform:translateY(-10vh) rotate(0deg)}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
+
+    /* Butterflies */
+    .butterfly{position:absolute;font-size:26px;animation: fly 10s ease-in-out infinite}
+    @keyframes fly{0%{transform:translate(0,0) scale(1)}50%{transform:translate(60px,-80px) scale(1.2)}100%{transform:translate(0,0) scale(1)}}
+
+    /* Glowing pulse behind header */
+    h1{position:relative;z-index:2}
+    h1::after{content:"";position:absolute;inset:-10px;background:radial-gradient(circle,#ff9ac4 0%,rgba(255,154,196,0) 70%);filter:blur(20px);z-index:-1;animation:pulse 3s ease-in-out infinite}
+    @keyframes pulse{0%{opacity:0.6;transform:scale(0.9)}50%{opacity:1;transform:scale(1.05)}100%{opacity:0.6;transform:scale(0.9)}}
+
+  </style>
+</head>
+<body>
+  <div class="heart-container" id="heartContainer"></div>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true">☀️</div>
+      <div>
+        <div style="font-weight:800;color:#ff6b94">GoodMorning</div>
+        <div style="font-size:12px;color:var(--muted)">A tiny 3-page greeting site</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#home" data-link="home" class="active">Home</a>
+      <a href="#quotes" data-link="quotes">Quotes</a>
+      <a href="#gallery" data-link="gallery">Gallery</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Home -->
+    <section id="home" class="page active">
+      <div class="card">
+        <div class="left">
+          <h1>Good Morning, Sadaf ☀️</h1>
+          <p class="lead">Good morning, beautiful. I hope your day begins with a smile as warm as the sunshine and a heart as calm as the early morning breeze. You deserve a day filled with gentle moments, kind thoughts, and every little happiness that finds its way to you. I just wanted you to know that someone out there is thinking of you and wishing the best for you today. May your morning be as lovely as your presence and may the rest of your day unfold with peace, joy, and a touch of magic. Have a wonderful morning, love.</p>
+          <a class="cta" id="surpriseBtn">Send a Surprise</a>
+        </div>
+        <div class="sun-wrap sunrise" aria-hidden="true">
+          <div class="sun">
+            <div class="rays" id="rays"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quotes -->
+    <section id="quotes" class="page">
+      <div>
+        <h2 style="margin-top:0;color:#ff6b94">Morning Quotes</h2>
+        <div class="quotes">
+          <blockquote id="quoteText">"Each morning we are born again. What we do today matters most." — Buddha</blockquote>
+          <div class="quote-actions">
+            <button id="newQuote">Another quote</button>
+            <button id="copyQuote">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" class="page">
+      <div>
+        <h2 style="margin-top:0;color:#ff6b94">Morning Gallery</h2>
+        <div class="gallery">
+          <div class="tile">🌅 Sunrise</div>
+          <div class="tile">☕ Coffee Time</div>
+          <div class="tile">🌼 Fresh Flowers</div>
+          <div class="tile">🚶 Morning Walk</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Built with ☀️ — open the file to preview. Click nav links to switch pages.
+  </footer>
+
+  <script>
+    // Simple client-side page routing (hash-based)
+    const links = document.querySelectorAll('nav a');
+    function showPage(name){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      const el = document.getElementById(name);
+      if(el) el.classList.add('active');
+      links.forEach(a=> a.classList.toggle('active', a.dataset.link===name));
+    }
+    function onHash(){
+      const h = location.hash.replace('#','') || 'home';
+      showPage(h);
+    }
+    window.addEventListener('hashchange', onHash);
+    onHash();
+
+    // Sun rays generation
+    const raysEl = document.getElementById('rays');
+    for(let i=0;i<12;i++){
+      const r = document.createElement('div');
+      r.className='ray';
+      r.style.transform = `rotate(${i*(360/12)}deg) translateY(-8%)`;
+      raysEl.appendChild(r);
+    }
+
+    // Quotes list
+    const quotes = [
+      'Each morning is a new arrival. — Rumi',
+      'Lose an hour in the morning, and you will be all day hunting for it. — Richard Whately',
+      'The morning was full of sunlight and hope. — Kate Chopin',
+      'With the new day comes new strength and new thoughts. — Eleanor Roosevelt',
+      'Every day is a fresh start. — Unknown'
+    ];
+    const quoteText = document.getElementById('quoteText');
+    document.getElementById('newQuote').addEventListener('click', ()=>{
+      quoteText.textContent = '"' + quotes[Math.floor(Math.random()*quotes.length)] + '"';
+    });
+    document.getElementById('copyQuote').addEventListener('click', ()=>{
+      navigator.clipboard?.writeText(quoteText.textContent).then(()=>{
+        alert('Quote copied!');
+      }).catch(()=>{alert('Copy not supported.')});
+    });
+
+    // Surprise button (small interactive popup)
+    document.getElementById('surpriseBtn').addEventListener('click', ()=>{
+      const name = prompt('Who would you like to say good morning to? (optional)');
+      const who = name ? `Good morning, ${name}! 🌞` : 'Good morning! Have a lovely day! 🌞';
+      alert(who);
+    });
+    // Floating hearts generator
+    const heartContainer = document.getElementById('heartContainer');
+    function spawnHeart(){
+      const h = document.createElement('div');
+      h.className = 'floating-heart';
+      h.textContent = '💗';
+      h.style.left = Math.random()*100 + 'vw';
+      h.style.animationDuration = (4 + Math.random()*4) + 's';
+      heartContainer.appendChild(h);
+      setTimeout(()=>h.remove(),8000);
+    }
+    setInterval(spawnHeart, 1000);
+</script>
+  <script>
+    // Sparkles
+    function spawnSparkle(){
+      const s=document.createElement('div');s.className='sparkle';
+      s.style.left=Math.random()*100+'vw';s.style.top=(Math.random()*100+20)+'vh';
+      document.body.appendChild(s);setTimeout(()=>s.remove(),3000);
+    }
+    setInterval(spawnSparkle,700);
+
+    // Petals
+    function spawnPetal(){
+      const p=document.createElement('div');p.className='petal';p.textContent='🌸';
+      p.style.left=Math.random()*100+'vw';p.style.animationDuration=(6+Math.random()*4)+'s';
+      document.body.appendChild(p);setTimeout(()=>p.remove
+</html>
